@@ -23,6 +23,7 @@ export interface Product {
   name: string;
   basePrice: number;
   specifications?: string;
+  imageUrl?: string;
 }
 
 export interface ProductVariant {
@@ -230,6 +231,13 @@ export interface VatReport {
   netVat: number;
 }
 
+export interface HomeSetting {
+  id: number;
+  settingKey: string;
+  settingValue: string;
+  shopId: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private base = '/api';
@@ -253,6 +261,9 @@ export class ApiService {
   // ─── Products ──────────────────────────────────────────
   getProducts(): Observable<Product[]> {
     return this.http.get<ApiResponse<Product[]>>(`${this.base}/products`).pipe(map(r => r.data));
+  }
+  getProductById(id: number): Observable<Product> {
+    return this.http.get<ApiResponse<Product>>(`${this.base}/products/${id}`).pipe(map(r => r.data));
   }
   createProduct(body: Partial<Product>): Observable<Product> {
     return this.http.post<ApiResponse<Product>>(`${this.base}/products`, body).pipe(map(r => r.data));
@@ -467,5 +478,16 @@ export class ApiService {
 
   getVatReport(): Observable<VatReport> {
     return this.http.get<ApiResponse<VatReport>>(`${this.base}/reports/vat`).pipe(map(r => r.data));
+  }
+
+  // ─── Home Settings (Banners) ──────────────────────────
+  getHomeSettings(): Observable<HomeSetting[]> {
+    return this.http.get<ApiResponse<HomeSetting[]>>(`${this.base}/home-settings`).pipe(map(r => r.data));
+  }
+  getHomeSetting(key: string): Observable<HomeSetting> {
+    return this.http.get<ApiResponse<HomeSetting>>(`${this.base}/home-settings/${key}`).pipe(map(r => r.data));
+  }
+  updateHomeSetting(body: { settingKey: string; settingValue: string }): Observable<HomeSetting> {
+    return this.http.post<ApiResponse<HomeSetting>>(`${this.base}/home-settings`, body).pipe(map(r => r.data));
   }
 }
