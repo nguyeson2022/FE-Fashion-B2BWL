@@ -170,7 +170,7 @@
         <img [src]="activeImage" alt="mini">
         <div class="texts">
           <div class="name">{{ product.name }}</div>
-          <div class="price">{{ currentPrice | number:'1.0-0' }} ₫</div>
+          <div class="price" *ngIf="!product.hidePrice">{{ currentPrice | number:'1.0-0' }} ₫</div>
         </div>
       </div>
       <div class="actions">
